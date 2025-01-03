@@ -1,8 +1,11 @@
 package boj10026;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main2 {
 
@@ -14,16 +17,17 @@ public class Main2 {
 	static boolean[][] visited;
 	static boolean[][] visitedCB;
 
-	static void input() {
-		Scanner scan = new Scanner(System.in);
-		N = scan.nextInt();
+	static void input() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(new StringTokenizer(br.readLine()).nextToken());
 		map = new char[N][N];
 		mapCB = new char[N][N];
 		visited = new boolean[N][N];
 		visitedCB = new boolean[N][N];
 
 		for (int i = 0; i < N; i++) {
-			String line = scan.next();
+			String line = new StringTokenizer(br.readLine()).nextToken();
 			for (int j = 0; j < N; j++) {
 				char c = line.charAt(j);
 				map[i][j] = c;
@@ -52,7 +56,7 @@ public class Main2 {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		input();
 
 		int general = 0;
