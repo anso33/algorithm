@@ -1,59 +1,55 @@
 package pg86971;
 
-import java.util.*;
+public class Solution {
 
-class Solution {
+	static private int[] parents;
 
-	public int getParent(int[] arr, int i) {
-		if (arr[i] == i) return i;
-		arr[i] = getParent(arr, arr[i]);
-		return arr[i];
+	public static int find(int i) {
+		if (parents[i] == i) return i;
+		return parents[i] = find(parents[i]);
 	}
 
+	public static void union(int v1, int v2) {
+		v1 = find(v1);
+		v2 = find(v2);
 
-	public int findDiff(int[] top) {
-		int p1, p2, c1, c2;
-		p1 = p2 = c1 = c2 =0;
-		p1 = getParent(top, 1);
-		c1++;
-		for (int i = 2; i < top.length; i++) {
-			int root = getParent(top, i);
-			if (root == p1) {
-				c1++;
-			} else {
-				p2 = root;
-				c2++;
-			}
+		if (v1 != v2) {
+			if (v1 > v2) parents[v1] = v2;
+			else parents[v2] = v1;
 		}
-
-		System.out.println("c1 " + c1 + " c2 " + c2);
-		if (c1 >= c2) return c1 - c2;
-		else return c2-c1;
 	}
 
-	public int solution(int n, int[][] wires) {
-		int[] top = new int[n + 1];
-		for (int i = 0; i < n; i++) {
-			top[i] = i;
-		}
+	public static int findDiff(int n) {
+		int a = 0, b = 0;
+		for (int i = 1; i <= n; i++)
+			if (find(parents[i]) == 1) a++;
+
+		b = n - a;
+		return Math.abs(a - b);
+	}
+
+	public static int solution(int n, int[][] wires) {
+		int answer = Integer.MAX_VALUE;
+
 		for (int i = 0; i < wires.length; i++) {
-			top[wires[i][1]] = wires[i][0]; // 부모 노드를 어떻게 정하지?
-		}
+			parents = new int[n + 1];
+			for (int p = 0; p <= n; p++) parents[p] = p;
 
-		int dif = n;
-		for (int i = 1; i < top.length; i++) {
-			int tmp = i;
-			if (top[i] != i) {
-				tmp = top[i];
-				top[i] = i;
+			for (int j = 0; j < wires.length; j++) {
+				if (i == j) continue;
+				int v1 = wires[j][0], v2 = wires[j][1];
+
+				union(v1, v2);
 			}
-			dif = Math.min(dif, findDiff(top));
-			top[i] = tmp;
-			System.out.println("tmp " + tmp);
+
+			int temp = findDiff(n);
+			answer = Math.min(answer, temp);
 		}
 
-		return dif;
+		return answer;
 	}
+
+
 
 	public static void main(String[] args) {
 		int n = 9;
